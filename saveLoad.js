@@ -331,7 +331,7 @@ function exportGame() {
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = `文明重建者_存档_${new Date().toISOString().slice(0,19)}.civ`;
+    a.download = `纪元重启_存档_${new Date().toISOString().slice(0,19)}.civ`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
