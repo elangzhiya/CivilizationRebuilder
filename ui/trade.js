@@ -33,6 +33,9 @@
                 <div class="trade-info-line" style="font-size: 0.75rem; color: var(--text-secondary); margin-bottom: 0.5rem;">
                     <span class="trade-price-display" v-html="priceDisplayHtml(r)"></span> |  <span class="trade-stock-display">{{ stockText(r) }}</span>
                 </div>
+                <div class="trade-heat-line" :style="heatStyle(r)" style="font-size: 0.75rem; margin-bottom: 0.5rem;">
+                    {{ heatText(r) }}
+                </div>
                 <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
                     <input type="number" class="trade-rate-input" :data-resource="r"
                            style="width: 120px; background: var(--bg-input); color: var(--text); border: 1px solid var(--border); border-radius: 0.4rem; padding: 0.3rem 0.6rem;"
@@ -126,6 +129,20 @@
         methods: {
             fmt(n) {
                 return formatNumber(n);
+            },
+            // 贸易热度可视化：价格偏移 = exp(heat)，热度持续贸易改变并自然衰减
+            heatText(r) {
+                const heat = this.GS.resources[r].tradeHeat || 0;
+                if (Math.abs(heat) < 1e-6) return '🌡️ 热度：平稳（价格无偏移）';
+                const pct = (Math.exp(heat) - 1) * 100;
+                if (heat > 0) return `🔥 热度 +${pct.toFixed(0)}%（被大量买入，价格偏高，适合出售）`;
+                return `❄️ 热度 ${pct.toFixed(0)}%（被大量卖出，价格偏低，适合买入）`;
+            },
+            heatStyle(r) {
+                const heat = this.GS.resources[r].tradeHeat || 0;
+                if (heat > 1e-6) return { color: 'var(--red)' };
+                if (heat < -1e-6) return { color: '#2e8b57' };
+                return { color: 'var(--text-dim)' };
             },
             // 数值 → 输入框显示文本。空 / 非法一律给空串，避免把 "NaN" 塞进 DOM。
             volumeText(v) {
