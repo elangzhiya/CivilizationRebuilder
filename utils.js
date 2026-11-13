@@ -7,11 +7,12 @@ function formatNumber(n) {
     const sign = n < 0 ? "-" : "";
     const absN = Math.abs(n);
 
-    if (absN < 1e3) return sign + absN.toFixed(2);
-    if (absN < 1e6) return sign + (absN / 1e3).toFixed(2) + "K";
-    if (absN < 1e9) return sign + (absN / 1e6).toFixed(2) + "M";
-    if (absN < 1e12) return sign + (absN / 1e9).toFixed(2) + "G";
-    return sign + (absN / 1e12).toFixed(2) + "T";
+    // 中文数字单位（万/亿/兆/京），比 K/M/G 更直观
+    if (absN < 1e4) return sign + absN.toFixed(2);
+    if (absN < 1e8) return sign + (absN / 1e4).toFixed(2) + "万";
+    if (absN < 1e12) return sign + (absN / 1e8).toFixed(2) + "亿";
+    if (absN < 1e16) return sign + (absN / 1e12).toFixed(2) + "兆";
+    return sign + (absN / 1e16).toFixed(2) + "京";
 }
 
 function canAfford(costMap) {
