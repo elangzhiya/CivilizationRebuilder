@@ -13,6 +13,7 @@
             <span class="res-name" :style="prodColor(r)">{{ r }}</span>
             <span class="res-value" :style="prodColor(r)">{{ valueText(r) }}</span>
             <span class="res-prod" :style="prodColor(r)">{{ prodText(r) }}</span>
+            <span v-if="isFull(r)" class="res-full-tag" title="已满仓：产量正在被浪费，建议扩建仓库或消费">满</span>
         </div>
     </div>
 </div>
@@ -23,6 +24,11 @@
             },
         },
         methods: {
+            // 满仓标记：库存顶到上限（有上限且接近满）
+            isFull(r) {
+                const res = this.GS.resources[r];
+                return res.cap !== Infinity && res.cap > 0 && res.amount >= res.cap - 1e-6;
+            },
             // 建筑价格中是否包含某资源（用于悬停高亮联动）
             priceHasResource(bKey, resName) {
                 return this.GS.buildings[bKey]?.price?.[resName] !== undefined;
