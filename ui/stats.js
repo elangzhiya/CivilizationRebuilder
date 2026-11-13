@@ -35,6 +35,20 @@
         </div>
     </div>
 
+    <h3 class="stats-section-title">资源曲线（近 1 小时，每 5 秒采样）</h3>
+    <div class="stats-curve-box">
+        <select v-model="selectedRes" class="stats-curve-select">
+            <option v-for="r in visibleResources" :key="r" :value="r">{{ r }}</option>
+        </select>
+        <span v-if="curveData" class="stats-curve-range">
+            最低 {{ fmtNum(curveData.min) }} ｜ 最高 {{ fmtNum(curveData.max) }}
+        </span>
+        <svg v-if="curveData" class="stats-curve-svg" viewBox="0 0 600 150" preserveAspectRatio="none">
+            <polyline :points="curveData.pts" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round"/>
+        </svg>
+        <p v-else class="stats-empty">采样中，稍等片刻（至少 2 个采样点）……</p>
+    </div>
+
     <h3 class="stats-section-title">永恒升级总计加成</h3>
     <p class="stats-summary">已研究 {{ researchedCount }} 项永恒升级</p>
     <p v-if="permanentBonuses.length === 0" class="stats-empty">尚未研究永恒升级。</p>
@@ -46,7 +60,54 @@
     </div>
 </div>
 `,
+        data() {
+            return {
+                selectedRes: '',
+                historyTick: 0, // 每 5 秒自增，驱动曲线 computed 重算
+            };
+        },
+        created() {
+            // 资源历史采样（全局只启动一次）：内存数据，刷新后重新积累
+            if (!window.__resHistory) {
+                window.__resHistory = [];
+                setInterval(() => {
+                    const amounts = {};
+                    for (let r in GameState.resources) {
+                        const res = GameState.resources[r];
+                        if (res.visible) amounts[r] = res.amount;
+                    }
+                    window.__resHistory.push({ t: Date.now(), amounts });
+                    if (window.__resHistory.length > 720) window.__resHistory.shift(); // 720点 = 1小时
+                }, 5000);
+            }
+            // 默认选中第一个可见资源
+            if (!this.selectedRes) {
+                const first = Object.keys(this.GS.resources).find(r => this.GS.resources[r].visible);
+                if (first) this.selectedRes = first;
+            }
+            setInterval(() => { this.historyTick++; }, 5000);
+        },
         computed: {
+            visibleResources() {
+                return Object.keys(this.GS.resources).filter(r => this.GS.resources[r].visible);
+            },
+            // 曲线数据：等距折线点 + 最值（依赖 historyTick 触发重算）
+            curveData() {
+                void this.historyTick;
+                const hist = window.__resHistory || [];
+                const r = this.selectedRes || this.visibleResources[0] || '';
+                if (!r || hist.length < 2) return null;
+                const vals = hist.map(h => h.amounts[r] || 0);
+                const min = Math.min(...vals), max = Math.max(...vals);
+                const range = (max - min) || 1;
+                const W = 600, H = 150, PAD = 8;
+                const pts = vals.map((v, i) => {
+                    const x = PAD + (W - 2 * PAD) * i / (vals.length - 1);
+                    const y = H - PAD - (H - 2 * PAD) * (v - min) / range;
+                    return x.toFixed(1) + ',' + y.toFixed(1);
+                }).join(' ');
+                return { pts, min, max };
+            },
             currentRunDaysText() {
                 return formatDays(this.GS.gameDays);
             },
@@ -175,6 +236,11 @@
                 }
 
                 return list;
+            },
+        },
+        methods: {
+            fmtNum(n) {
+                return formatNumber(n);
             },
         },
     };
