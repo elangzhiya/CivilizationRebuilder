@@ -29,6 +29,7 @@
         </div>
 
         <div class="log-panel">
+            <special-resources></special-resources>
             <queue-panel></queue-panel>
             <div class="log-header">
                 <span id="current-date">{{ dateText }}</span>
