@@ -61,6 +61,33 @@ function processOfflineTime() {
     // 调整到 GameState = Vue.reactive(GameState) 之后再调用。
     ResourcesManager.add({ "时间晶体": crystalGain });
     addEventLog(`离线 ${timeStr}，获得 ${crystalGain} 时间晶体。`);
+
+    // ===== 离线产量结算 =====
+    // 存档不保存 production 字段，先重算一次得到产量快照再结算。
+    // 规则：只结算净生产为正的普通资源（排除重置类/特殊资源），按离线时长 × 50% 效率发放，封顶 12 小时。
+    ProductionEngine.computeProductionAndCaps();
+    const OFFLINE_PROD_RATE = 0.5;
+    const OFFLINE_PROD_CAP = 43200; // 12小时
+    const gains = [];
+    for (let r in GameState.resources) {
+        if (r === '遗物' || r === '暗能量' || r === '孢子' || r === '时间晶体' || r === '奇点' || r === '智慧') continue;
+        const res = GameState.resources[r];
+        const prod = res.production;
+        if (prod > 1e-9 && res.cap !== Infinity && res.cap > 0) {
+            const before = res.amount;
+            res.amount = Math.min(res.cap, before + prod * Math.min(elapsed, OFFLINE_PROD_CAP) * OFFLINE_PROD_RATE);
+            if (res.amount > before + 1e-9) {
+                res.visible = true;
+                gains.push({ name: r, gain: res.amount - before });
+            }
+        }
+    }
+    if (gains.length > 0) {
+        gains.sort((a, b) => b.gain - a.gain);
+        const parts = gains.slice(0, 5).map(g => `${g.name} +${formatNumber(g.gain)}`);
+        const more = gains.length > 5 ? ` 等${gains.length}种资源` : '';
+        addEventLog(`离线产量结算（50%效率）：${parts.join('、')}${more}。`);
+    }
 }
 const IS_LOCAL = location.protocol === 'file:';
 
