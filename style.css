@@ -1292,3 +1292,7 @@ body.dark-theme .building-card.highlight {
 .lore-title{font-weight:700;margin-bottom:.5rem}
 .lore-box p{margin:.4rem 0;line-height:1.7}
 .lore-note{font-size:.8rem;color:var(--text-secondary,#888)}
+
+/* ===== 特殊资源面板（右侧栏，与常规资源分离） ===== */
+.special-res-box{border:1px solid var(--border, #ccc);border-radius:8px;padding:6px;margin-bottom:0.75rem}
+.special-res-box .special-item{font-size:0.85rem}
