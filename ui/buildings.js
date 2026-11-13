@@ -141,7 +141,7 @@
             cardAffordClass(b) {
                 const cls = { highlight: this.ui.hoveredResource && priceHasResource(this.ui.hoveredResource, b) };
                 const bld = this.GS.buildings[b];
-                if (bld) cls[this.GS.cheat?.freeBuy || canAfford(bld.price) ? 'can-buy' : 'cant-buy'] = true;
+                if (bld) cls['building-card-plain'] = true;
                 return cls;
             },
             // 一键买最大：循环购买直到买不起（上限1000次防死循环）
