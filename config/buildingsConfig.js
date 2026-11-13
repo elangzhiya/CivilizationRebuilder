@@ -1479,4 +1479,66 @@ const BUILDINGS_CONFIG = {
         requiresLocal: {},
         desc: "在高维空间中进行计算，再将计算结果返回到三维空间。"
     },
+
+    // ========== 地标建筑（末世火种世界观，每个时代一座） ==========
+    "火种纪念碑": {
+        class: "ground", type: "地标",
+        unlockCondition: { tech: "初等数学" },
+        cost: (s, c) => standardCost({木头: 100, 石头: 150}, 1.25, c, getGlobalCostMultiplier(s)),
+        produces: {}, consumes: {}, caps: {科学: 20},
+        happiness: 3,
+        providesLocal: {},
+        requiresLocal: {},
+        desc: "石碑上刻着火种计划的誓词：「文明不灭，火种永传」。每次凝望都会让幸存者想起出发的理由——全营地幸福度 +3，科学上限 +20。"
+    },
+    "长冬要塞": {
+        class: "ground", type: "地标",
+        unlockCondition: { tech: "煤炭供暖" },
+        cost: (s, c) => standardCost({石头: 250, 煤: 60, 铁: 40}, 1.25, c, getGlobalCostMultiplier(s)),
+        produces: {}, consumes: {煤: 0.3}, caps: {},
+        happiness: 5,
+        providesLocal: {},
+        requiresLocal: {},
+        desc: "厚墙、地窖与集中供暖管道构成的庇护中枢。长冬再冷，要塞的炉火不熄——全营地幸福度 +5，但持续消耗煤炭。"
+    },
+    "大图书馆": {
+        class: "ground", type: "地标",
+        unlockCondition: { tech: "杜威分类法" },
+        cost: (s, c) => standardCost({木头: 300, 石头: 250, 建材: 20}, 1.2, c, getGlobalCostMultiplier(s)),
+        produces: {科学: 0.5}, consumes: {}, caps: {科学: 100},
+        providesLocal: {},
+        requiresLocal: { population: 2 },
+        modifiers: [{ target: "大学", prodFactor: 0.1, capFactor: 0.05 }],
+        desc: "收藏着旧文明残存的典籍与火种计划的档案。学者们在这里整理前纪元的教训——大额产出科学，并让大学效率 +10%、扩容 +5%。"
+    },
+    "火种熔炉": {
+        class: "ground", type: "地标",
+        unlockCondition: { tech: "炼钢技术" },
+        cost: (s, c) => standardCost({铁: 150, 铜: 100, 建材: 60}, 1.2, c, getGlobalCostMultiplier(s)),
+        produces: {钢: 1.0}, consumes: {煤: 1.5, 电力: 1.0}, caps: {},
+        providesLocal: {},
+        requiresLocal: { population: 3 },
+        modifiers: [{ target: "炼钢厂", prodFactor: 0.15 }, { target: "铁冶炼厂", prodFactor: 0.15 }],
+        desc: "以旧时代图纸建造的巨型冶炼中枢，炉温远超普通高炉。它本身的钢水产量可观，还能让炼钢厂与铁冶炼厂效率 +15%。"
+    },
+    "天穹反应堆": {
+        class: "ground", type: "地标",
+        unlockCondition: { tech: "核裂变" },
+        cost: (s, c) => standardCost({建材: 250, 钢: 200}, 1.18, c, getGlobalCostMultiplier(s)),
+        produces: {电力: 10}, consumes: {铀: 0.05}, caps: {},
+        providesLocal: {},
+        requiresLocal: { population: 2 },
+        happiness: 2,
+        desc: "永不熄灭的原子之心。一座反应堆点亮整座营地——产出 10 电力，全营地幸福度 +2，仅消耗微量铀燃料。"
+    },
+    "火种方舟": {
+        class: "ground", type: "地标",
+        unlockCondition: { tech: "星际航行" },
+        cost: (s, c) => standardCost({建材: 500, 钢: 400, 塑料: 200}, 1.15, c, getGlobalCostMultiplier(s)),
+        produces: {科学: 3}, consumes: {电力: 3}, caps: {科学: 1500},
+        happiness: 8,
+        providesLocal: {},
+        requiresLocal: { population: 5 },
+        desc: "火种计划的终极造物：一艘待发的世代飞船。方舟的科研舱不停推演着文明的未来——大额产出科学、大幅提升科学上限，全营地幸福度 +8。它静静停泊在轨道上，等待文明真正抵达永恒的那一天。"
+    },
 };
