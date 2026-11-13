@@ -172,13 +172,18 @@
                     }).join('\n');
                     priceHtml = '<hr>' + priceHtml;
                 }
-                return `${tech.desc}${priceHtml}`;
+                // 里程碑科技的全局加成展示
+                const gp = tech.effect && tech.effect.global && tech.effect.global.prod;
+                const globalHtml = gp ? `<hr><b style="color:#e6a017;">⚡ 全建筑产量 +${Math.round(gp * 100)}%（跳跃式突破）</b>` : '';
+                return `${tech.desc}${globalHtml}${priceHtml}`;
             },
             // 已研究科技提示
             researchedTooltip(t) {
                 const tech = this.GS.techs[t];
                 if (!tech) return '';
-                return `${tech.desc}<br>✓ 已研究`;
+                const gp = tech.effect && tech.effect.global && tech.effect.global.prod;
+                const globalHtml = gp ? `<br><b style="color:#e6a017;">⚡ 全建筑产量 +${Math.round(gp * 100)}%</b>` : '';
+                return `${tech.desc}${globalHtml}<br>✓ 已研究`;
             },
             // 升级提示
             upgradeTooltip(u) {
