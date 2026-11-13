@@ -172,9 +172,9 @@
                     }).join('\n');
                     priceHtml = '<hr>' + priceHtml;
                 }
-                // 里程碑科技的全局加成展示
+                // 里程碑科技的全局加成展示（纯文本，不加色）
                 const gp = tech.effect && tech.effect.global && tech.effect.global.prod;
-                const globalHtml = gp ? `<hr><b style="color:#e6a017;">⚡ 全建筑产量 +${Math.round(gp * 100)}%（跳跃式突破）</b>` : '';
+                const globalHtml = gp ? `<hr>全建筑产量 +${Math.round(gp * 100)}%` : '';
                 return `${tech.desc}${globalHtml}${priceHtml}`;
             },
             // 已研究科技提示
@@ -182,7 +182,7 @@
                 const tech = this.GS.techs[t];
                 if (!tech) return '';
                 const gp = tech.effect && tech.effect.global && tech.effect.global.prod;
-                const globalHtml = gp ? `<br><b style="color:#e6a017;">⚡ 全建筑产量 +${Math.round(gp * 100)}%</b>` : '';
+                const globalHtml = gp ? `<br>全建筑产量 +${Math.round(gp * 100)}%` : '';
                 return `${tech.desc}${globalHtml}<br>✓ 已研究`;
             },
             // 升级提示
