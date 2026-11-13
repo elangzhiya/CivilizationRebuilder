@@ -109,6 +109,11 @@ const EffectsManager = (function() {
                     registerEffect(`building.${buildingId}.cap`, 'tech', techId, eff.capFactor, true);
                 }
             }
+            // 里程碑科技的全局产量加成（effect.global.prod，加法叠加）
+            const techEff = tech.effect;
+            if (techEff && techEff.global && techEff.global.prod) {
+                registerEffect('global.prod', 'tech', techId, techEff.global.prod, true);
+            }
         }
 
         // 2. 升级效果
