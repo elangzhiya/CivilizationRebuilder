@@ -14,8 +14,26 @@ const GameLoop = (function() {
         return GameState.speed > 1 ? GameState.speed : 1;
     }
 
+    let frameCount = 0;
     function tickResources(deltaGameSec) {
-        ProductionEngine.computeProductionAndCaps();
+        // 性能节流：全量重算（含效果聚合/效率迭代）从每 tick(200ms) 降为每秒一次。
+        // 所有改变产量的操作（买建筑/研究/政策/事件变化等）都会显式调用
+        // computeProductionAndCaps，即时性不受影响；此处仅省掉常规帧的重复计算。
+        frameCount++;
+        if (frameCount >= 5) {
+            frameCount = 0;
+            ProductionEngine.computeProductionAndCaps();
+        }
+        // 作弊「无限资源」每帧回满（节流后仍保持无消耗体验）
+        if (GameState.cheat && GameState.cheat.infiniteRes) {
+            for (let r in GameState.resources) {
+                const res = GameState.resources[r];
+                if (res.cap === Infinity || res.cap <= 0) continue;
+                if (r === '遗物' || r === '暗能量' || r === '孢子' || r === '时间晶体' || r === '奇点') continue;
+                res.amount = res.cap;
+                res.visible = true;
+            }
+        }
 
         // 更新资源量（生产/消耗）
         const deltaMap = {};
