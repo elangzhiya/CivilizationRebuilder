@@ -76,6 +76,7 @@ const ProductionEngine = (function() {
 
         let consMult = EffectsManager.getBuildingConsMultiplier(buildingKey);
         consMult *= (1 + EffectsManager.getAdditiveValue('global.speed'));
+        consMult *= 0.8; // 数值平滑：全建筑消耗减免 20%（改回 1.0 恢复原版），缓解资源压力
 
         let capMult = EffectsManager.getBuildingCapMultiplier(buildingKey);
 

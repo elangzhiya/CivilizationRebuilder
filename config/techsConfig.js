@@ -613,6 +613,17 @@ const TECHS_CONFIG = {
         effect: {暗物质研究所: {prodFactor: 0.50}} },
 };
 
+// ===== 数值平滑：科技成本打折 =====
+// 缩小阶段间跨度，跨时代更快（改回 1.0 恢复原版）
+const TECH_COST_SCALE = 0.7;
+for (const _tid in TECHS_CONFIG) {
+    const _p = TECHS_CONFIG[_tid].price;
+    if (!_p) continue;
+    for (const _r in _p) {
+        _p[_r] = Math.max(1, Math.floor(_p[_r] * TECH_COST_SCALE));
+    }
+}
+
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { TECHS_CONFIG };
 }

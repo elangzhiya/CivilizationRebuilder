@@ -8,7 +8,13 @@
  * @param {number} [costMultiplier=1.0] - 外部成本增长率修正因子（如全局成本加成）
  * @returns {Object.<string, number>} 计算后的价格对象，键为资源名，值为最终所需数量
  */
+// ===== 数值平滑：成本增长率压缩系数 =====
+// 1 = 原版曲线；0.7 表示把每座建筑的成本增幅打折（如 ×1.4 → ×1.28，×1.2 → ×1.14）
+// 调回 1.0 即恢复原版
+const COST_GROWTH_SCALE = 0.7;
+
 function standardCost(baseCostMap, growthRate, count, costMultiplier = 1.0) {
+    growthRate = 1 + (growthRate - 1) * COST_GROWTH_SCALE; // 压缩增长率，曲线更平滑
     const effectiveGrowth = 1 + (growthRate - 1) * costMultiplier;
     /** @type {Object.<string, number>} */
     const price = {};
