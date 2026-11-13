@@ -22,7 +22,7 @@
             </div>
             <div class="building-grid">
                 <div v-for="b in cat.buildings" :key="b" class="building-card" :data-building="b"
-                     :class="{ highlight: ui.hoveredResource && priceHasResource(ui.hoveredResource, b) }"
+                     :class="cardAffordClass(b)"
                      @mouseenter="hoverBuilding(b)" @mouseleave="unhoverBuilding()"
                      @click="buy(b, $event)" v-tooltip="() => buildingTooltip(b)">
                     <button v-if="hasModes(b)" class="mode-gear-btn" :data-building="b" :title="modeTitle(b)" @click.stop="switchMode(b)">⚙️</button>
@@ -33,8 +33,10 @@
                         <span v-if="hasModes(b)" class="mode-indicator"> | {{ modeName(b) }}</span>
                     </div>
                     <div class="btn-group">
-                        <button class="btn-square plus-btn" :data-building="b" @click.stop="activate(b, $event)">+</button>
-                        <button class="btn-square minus-btn" :data-building="b" @click.stop="deactivate(b, $event)">-</button>
+                        <button class="btn-square plus-btn" :data-building="b" @click.stop="activate(b, $event)" title="激活（Ctrl+点击输入数量）">+</button>
+                        <button class="btn-square minus-btn" :data-building="b" @click.stop="deactivate(b, $event)" title="停用（Ctrl+点击输入数量）">-</button>
+                        <button class="btn-square max-btn" :data-building="b" @click.stop="activateAll(b)" title="一键全部激活">⇤</button>
+                        <button class="btn-square max-btn" :data-building="b" @click.stop="buyMax(b)" title="一键买最大（把当前资源全部花在这个建筑上）">⇥</button>
                     </div>
                 </div>
             </div>
@@ -135,6 +137,44 @@
                 return null;
             },
             // ---------- 购买/激活 ----------
+            // 卡片级可购状态：买得起绿边，买不起整体变暗
+            cardAffordClass(b) {
+                const cls = { highlight: this.ui.hoveredResource && priceHasResource(this.ui.hoveredResource, b) };
+                const bld = this.GS.buildings[b];
+                if (bld) cls[this.GS.cheat?.freeBuy || canAfford(bld.price) ? 'can-buy' : 'cant-buy'] = true;
+                return cls;
+            },
+            // 一键买最大：循环购买直到买不起（上限1000次防死循环）
+            buyMax(b) {
+                const bld = this.GS.buildings[b];
+                const cfg = BUILDINGS_CONFIG[b];
+                if (!bld || !cfg) return;
+                let n = 0;
+                while (n < 1000) {
+                    if (!this.GS.cheat?.freeBuy && !canAfford(bld.price)) break;
+                    if (!this.GS.cheat?.freeBuy && !ResourcesManager.consume(bld.price)) break;
+                    bld.count++;
+                    bld.active++;
+                    bld.price = cfg.cost(GameState, bld.count);
+                    n++;
+                    if (this.GS.cheat?.freeBuy && bld.count >= 100) break; // 免费模式下封顶100
+                }
+                if (n > 0) {
+                    updateBuildingPrices();
+                    computeProductionAndCaps();
+                    renderAll();
+                    addEventLog(`${b} 一键建造 ${n} 座。`);
+                }
+            },
+            // 一键全部激活
+            activateAll(b) {
+                const bd = this.GS.buildings[b];
+                if (!bd || bd.active >= bd.count) return;
+                bd.active = bd.count;
+                updateBuildingPrices();
+                updateUpgradePrices();
+                computeProductionAndCaps();
+            },
             affordClass(b) {
                 const status = getAffordabilityStatus(this.GS.buildings[b].price);
                 if (status === 'insufficient') return 'insufficient-name';
