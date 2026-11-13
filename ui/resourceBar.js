@@ -13,7 +13,6 @@
             <span class="res-name" :style="prodColor(r)">{{ r }}</span>
             <span class="res-value" :style="prodColor(r)">{{ valueText(r) }}</span>
             <span class="res-prod" :style="prodColor(r)">{{ prodText(r) }}</span>
-            <span v-if="isFull(r)" class="res-full-tag" title="已满仓：产量正在被浪费，建议扩建仓库或消费">满</span>
         </div>
     </div>
 </div>
