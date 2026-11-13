@@ -16,12 +16,8 @@
             },
         },
         methods: {
-            // 日志分色：随机事件紫、解锁/成就金、事件结束灰、其他默认
-            logColor(text) {
-                if (typeof text !== 'string') return {};
-                if (text.includes('随机事件') || text.includes('触发')) return { color: '#a469d6' };
-                if (text.includes('解锁') || text.includes('成就') || text.includes('✨') || text.includes('🔥')) return { color: '#d69e27' };
-                if (text.includes('[事件结束]')) return { color: '#8a9aac' };
+            // 日志保持默认色（原版风格）
+            logColor() {
                 return {};
             },
         },
