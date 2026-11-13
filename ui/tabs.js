@@ -2,16 +2,16 @@
 (function () {
     // 选项卡定义（顺序与原版一致）
     const TAB_DEFS = [
-        { id: 'building', label: '建筑' },
-        { id: 'tech', label: '科技' },
-        { id: 'policy', label: '政策' },
-        { id: 'trade', label: '贸易' },
-        { id: 'crystal', label: '晶体' },
-        { id: 'permanent', label: '永恒' },
-        { id: 'achievements', label: '成就' },
-        { id: 'stats', label: '统计' },
-        { id: 'reset', label: '选项' },
-        { id: 'changelog', label: '更新日志' },
+        { id: 'building', label: '🏛 建筑' },
+        { id: 'tech', label: '🔬 科技' },
+        { id: 'policy', label: '📜 政策' },
+        { id: 'trade', label: '💱 贸易' },
+        { id: 'crystal', label: '💎 晶体' },
+        { id: 'permanent', label: '♾️ 永恒' },
+        { id: 'achievements', label: '🏆 成就' },
+        { id: 'stats', label: '📊 统计' },
+        { id: 'reset', label: '⚙️ 选项' },
+        { id: 'changelog', label: '📋 更新日志' },
     ];
 
     const TabBar = {
