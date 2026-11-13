@@ -624,6 +624,30 @@ for (const _tid in TECHS_CONFIG) {
     }
 }
 
+// ===== 里程碑科技：跳跃式全局产量加成（TECH_GLOBAL_PROD，整体删除即回原版） =====
+// 每个关键时代的突破科技给全建筑产量一次性大加成（加法叠加），越往后跳越大
+const TECH_GLOBAL_PROD = {
+    "印刷术": 0.25,      // 知识开始流通：+25%
+    "初等数学": 0.25,    // 计量与规划：+25%
+    "管理学": 0.30,      // 组织效率：+30%
+    "化学": 0.30,        // 物料革命：+30%
+    "微积分": 0.50,      // 精密计算：+50%
+    "牛顿力学": 0.50,    // 经典物理体系：+50%
+    "电磁感应": 0.50,    // 电气时代开启：+50%
+    "运筹学": 0.50,      // 现代工业管理：+50%
+    "基因编辑": 0.75,    // 生命科学革命：+75%
+    "量子力学": 1.00,    // 微观物理革命：+100%
+    "核裂变": 1.00,      // 原子能时代：+100%
+    "星际航行": 1.50,    // 跨行星文明：+150%
+    "暗能量融合": 2.00,  // 宇宙级能源：+200%
+};
+for (const _mk in TECH_GLOBAL_PROD) {
+    if (TECHS_CONFIG[_mk]) {
+        TECHS_CONFIG[_mk].effect = TECHS_CONFIG[_mk].effect || {};
+        TECHS_CONFIG[_mk].effect.global = { prod: TECH_GLOBAL_PROD[_mk] };
+    }
+}
+
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = { TECHS_CONFIG };
 }
