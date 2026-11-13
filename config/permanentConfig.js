@@ -335,6 +335,13 @@ const PERMANENT_CONFIG = {
         effect: {},
         prereq: ["宇宙起源III"],
     },
+    "文明火种": {
+        name: "文明火种",
+        price: { 遗物: 25 },
+        desc: "文明的火种永不熄灭。每次软重置后自动获得：木头 200、石头 150、科学 50，以及 2 座帐篷、1 座伐木场，开局不再从零爬起。",
+        effect: {},
+        prereq: null,
+    },
 
 };
 
