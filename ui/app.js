@@ -3,7 +3,7 @@
     const GameApp = {
         template: `
 <div class="game-container">
-    <h2>纪元重启<span class="game-subtitle">🔥 末世火种 · 文明在废墟中重生</span></h2>
+    <h2>纪元重启<span class="game-subtitle">末世火种 · 文明在废墟中重生</span></h2>
     <div id="happiness-display" v-tooltip="happinessTooltip">😊 幸福度: {{ effectiveHappiness.toFixed(1) }}%</div>
     <div class="main-layout">
         <!-- 左侧边栏：资源 + 行动 -->
