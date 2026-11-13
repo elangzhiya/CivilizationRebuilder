@@ -61,6 +61,23 @@ function softReset(extraRelic = 0, extraDarkEnergy = 0,extraSpore=0,extraSingula
         }
     }
 
+    // 永恒升级「文明火种」：软重置后赠送初始资源与建筑（需在清零循环之后执行）
+    if (GameState.permanent["文明火种"]?.researched) {
+        const starterRes = { 木头: 200, 石头: 150, 科学: 50 };
+        for (let r in starterRes) {
+            if (GameState.resources[r]) {
+                GameState.resources[r].amount += starterRes[r];
+                GameState.resources[r].visible = true;
+            }
+        }
+        const starterBld = { 帐篷: 2, 伐木场: 1 };
+        for (let b in starterBld) {
+            const bd = GameState.buildings[b];
+            if (bd) { bd.count += starterBld[b]; bd.active += starterBld[b]; bd.visible = true; }
+        }
+        addEventLog("🔥 文明火种点燃：初始资源与建筑已就位。");
+    }
+
     // 重置贸易系统和热度
     TradeEngine.updateMaxTradeVolume(GameState);
     TradeEngine.resetTradeRates(GameState);
