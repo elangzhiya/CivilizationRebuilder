@@ -17,7 +17,7 @@ class GameEngine {
         if (!b || !cfg) return false;
         let successCount = 0;
         for (let i = 0; i < quantity; i++) {
-            if (!ResourcesManager.consume(b.price)) break;
+            if (!GameState.cheat?.freeBuy && !ResourcesManager.consume(b.price)) break;
             b.count++;
             b.active++;
             successCount++;
@@ -35,7 +35,7 @@ class GameEngine {
     researchTech(key) {
         const t = GameState.techs[key];
         if (t.researched) return false;
-        if (!ResourcesManager.consume(t.price)) return false;
+        if (!GameState.cheat?.freeBuy && !ResourcesManager.consume(t.price)) return false;
         if (t.challenge) {
             const confirmMsg = `⚠️ 警告：研究挑战后除非完成挑战要求或进行软重置，否则不能退出挑战！确定要研究吗？`;
             if (!confirm(confirmMsg)) return false;
@@ -54,8 +54,8 @@ class GameEngine {
         if (!up.visible) return false;
         let successCount = 0;
         for (let i = 0; i < quantity; i++) {
-            if (!canAfford(up.price)) break;
-            ResourcesManager.consume(up.price);      // 一定会成功，因为上面检查过
+            if (!GameState.cheat?.freeBuy && !canAfford(up.price)) break;
+            if (!GameState.cheat?.freeBuy) ResourcesManager.consume(up.price);      // 一定会成功，因为上面检查过
             up.level++;
             // 立即重新计算该升级的价格（下一级）
             up.price = UPGRADES_CONFIG[key].cost(GameState, up.level);

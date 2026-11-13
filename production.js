@@ -270,6 +270,13 @@ const ProductionEngine = (function() {
             }
         }
 
+        // ===== 作弊面板：锁定上限（每帧重算后覆盖写入） =====
+        if (state.cheat && state.cheat.capSet) {
+            for (let r in state.cheat.capSet) {
+                if (state.resources[r]) state.resources[r].cap = state.cheat.capSet[r];
+            }
+        }
+
         for (let bKey in state.buildings) {
             const bld = state.buildings[bKey];
             if (bldRaw[bKey]) {

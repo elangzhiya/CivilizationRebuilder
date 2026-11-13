@@ -1258,3 +1258,19 @@ body.dark-theme .building-card.highlight {
     font-weight: 600;
     white-space: nowrap;
 }
+
+/* ===== 作弊面板 ===== */
+.cheat-root{position:fixed;right:14px;bottom:14px;z-index:9999}
+.cheat-toggle{background:#4a9fc8;color:#fff;border:none;border-radius:6px;padding:6px 14px;cursor:pointer;font-size:13px;box-shadow:0 2px 6px rgba(0,0,0,.25)}
+.cheat-toggle:hover{background:#3a8db6}
+.cheat-panel{margin-top:8px;background:#fff;color:#1a1a1a;border:1px solid #bbb;border-radius:8px;padding:12px 14px;width:520px;box-shadow:0 4px 16px rgba(0,0,0,.2);font-size:13px}
+.dark-theme .cheat-panel{background:#2a2a2e;color:#ddd;border-color:#555}
+.cheat-title{font-weight:700;margin-bottom:8px}
+.cheat-row{display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap}
+.cheat-btn{border:1px solid #999;background:#f5f5f5;color:inherit;border-radius:4px;padding:3px 10px;cursor:pointer;font-size:12px}
+.dark-theme .cheat-btn{background:#3a3a40;border-color:#666}
+.cheat-btn.on{background:#4a9fc8;color:#fff;border-color:#4a9fc8}
+.cheat-select,.cheat-input{border:1px solid #999;border-radius:4px;padding:3px 6px;font-size:12px;background:#fff;color:inherit}
+.dark-theme .cheat-select,.dark-theme .cheat-input{background:#3a3a40;color:#ddd}
+.cheat-input{width:110px}
+.cheat-note{font-size:11px;color:#777;margin-top:4px}

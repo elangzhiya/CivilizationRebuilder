@@ -39,6 +39,7 @@
     </div>
 
     <import-modal v-if="ui.importModalOpen"></import-modal>
+    <cheat-panel></cheat-panel>
     <tooltip-host></tooltip-host>
 </div>
 `,

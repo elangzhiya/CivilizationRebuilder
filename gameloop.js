@@ -10,7 +10,8 @@ const GameLoop = (function() {
     let gameDayAccum = 0; // 不足一天的累计秒数
 
     function getSpeed() {
-        return GameState.speed === 2 ? 2 : 1;
+        // 作弊面板支持任意倍速：speed 为数值且 >1 时直接生效
+        return GameState.speed > 1 ? GameState.speed : 1;
     }
 
     function tickResources(deltaGameSec) {
@@ -98,6 +99,8 @@ const GameLoop = (function() {
         if (crystalIntervalId) clearInterval(crystalIntervalId);
         crystalIntervalId = setInterval(() => {
             if (GameState.speed !== 2) return;
+            // 作弊模式（开启无需求购买）不消耗时间晶体
+            if (GameState.cheat && GameState.cheat.freeBuy) return;
             const crystal = GameState.resources["时间晶体"];
             if (!crystal) return;
             if (crystal.amount >= 1) {
