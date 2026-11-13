@@ -340,6 +340,16 @@ const BUILDINGS_CONFIG = {
         requiresLocal: {population: 1},
         desc: "正规综合医院，配备专业医生和器械，抑制天花的效果比卫生所更好。"
     },
+    "疗养院": {
+        class: "ground", type: "医疗",
+        unlockCondition: { tech: "生物学" },
+        cost: (s, c) => standardCost({建材: 80, 塑料: 40, 科学: 100}, 1.15, c, getGlobalCostMultiplier(s)),
+        produces: {}, consumes: {电力: 0.1}, caps: {},
+        happiness: 4,
+        providesLocal: {},
+        requiresLocal: {},
+        desc: "花园式的康复中心，配备心理疏导与理疗设施。全营地幸福度 +4，让疲惫的幸存者有时间喘息。"
+    },
 
     // ========== 地面 - 生产 ==========
     "伐木场": {
@@ -441,6 +451,16 @@ const BUILDINGS_CONFIG = {
         providesLocal: {},
         requiresLocal: { population: 1 },
         desc: "地下开采铀矿石，经简单破碎后得到铀。"
+    },
+    "水泥厂": {
+        class: "ground", type: "生产",
+        unlockCondition: { tech: "材料化学" },
+        cost: (s, c) => standardCost({铁: 120, 煤: 60, 建材: 30}, 1.15, c, getGlobalCostMultiplier(s)),
+        produces: {建材: 0.6}, consumes: {石头: 1.2, 煤: 0.5}, caps: {},
+        happiness: -0.2,
+        providesLocal: {},
+        requiresLocal: { population: 2 },
+        desc: "回转窑将石灰石煅烧成熟料，再研磨成水泥。用石头持续生产建材，粉尘污染轻微降低幸福度。需要2名工人。"
     },
 
     // ========== 地面 - 工厂 ==========
@@ -564,6 +584,15 @@ const BUILDINGS_CONFIG = {
         requiresLocal: { population: 1 },
         desc: "内燃机，燃烧石油发电。"
     },
+    "风力发电机": {
+        class: "ground", type: "电力",
+        unlockCondition: { tech: "能源规划" },
+        cost: (s, c) => standardCost({金属板: 30, 建材: 20}, 1.12, c, getGlobalCostMultiplier(s)),
+        produces: {电力: 1.0}, consumes: {}, caps: {},
+        providesLocal: {},
+        requiresLocal: {},
+        desc: "塔架式风力涡轮机，不烧燃料、不排废气，风吹就发电。不需要人力维护。"
+    },
     "太阳能板": {
         class: "ground", type: "电力",
         unlockCondition: { tech: "太阳能" },
@@ -609,6 +638,15 @@ const BUILDINGS_CONFIG = {
             { id: "nuclear_fuel", name: "核燃料模式", produces: {电力: 0.8}, consumes: {核燃料: 0.02} },
             { id: "uranium_fuel", name: "铀燃料模式", produces: {电力: 0.7}, consumes: {铀: 0.3} }
         ]
+    },
+    "聚变电厂": {
+        class: "ground", type: "电力",
+        unlockCondition: { tech: "可控核聚变" },
+        cost: (s, c) => standardCost({建材: 400, 钢: 300, 科学: 200}, 1.15, c, getGlobalCostMultiplier(s)),
+        produces: {电力: 15}, consumes: {核燃料: 0.1}, caps: {},
+        providesLocal: {},
+        requiresLocal: { population: 3 },
+        desc: "托卡马克装置的地面电站版本，一座即可点亮整座城市。产出海量电力，仅消耗微量核燃料。需要3名工程师。"
     },
 
     // ========== 地面 - 科学 ==========
@@ -682,6 +720,15 @@ const BUILDINGS_CONFIG = {
         providesLocal: {},
         requiresLocal: { population: 1 },
         desc: "环形对撞机，产出科学，且每座（无论是否激活）提升2%遗物获取量。"
+    },
+    "天文台": {
+        class: "ground", type: "科学",
+        unlockCondition: { tech: "天体物理" },
+        cost: (s, c) => standardCost({金属板: 60, 建材: 50, 科学: 80}, 1.15, c, getGlobalCostMultiplier(s)),
+        produces: {科学: 1.0}, consumes: {电力: 0.2}, caps: {科学: 200},
+        providesLocal: {},
+        requiresLocal: { population: 1 },
+        desc: "山顶大型光学望远镜阵列，日夜扫描深空。大额产出科学并提升科学上限，需要少量电力。"
     },
 
     // ========== 地面 - 存储 ==========
