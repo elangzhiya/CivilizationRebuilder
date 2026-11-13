@@ -18,6 +18,9 @@
             <label><input type="checkbox" v-model="GS.cheat.freeBuy"> 无需求购买（建筑/科技/升级免费）</label>
         </div>
         <div class="cheat-row">
+            <label><input type="checkbox" v-model="GS.cheat.infiniteRes"> 无限资源（资源拉满上限，不因消耗减少）</label>
+        </div>
+        <div class="cheat-row">
             <select v-model="resName" class="cheat-select">
                 <option v-for="r in resList" :key="r" :value="r">{{ r }}</option>
             </select>
@@ -38,16 +41,18 @@
         },
         watch: {
             'GS.cheat.freeBuy'() { this.persist(); },
+            'GS.cheat.infiniteRes'() { this.persist(); },
         },
         created() {
             if (!this.GS.cheat) {
-                this.GS.cheat = { freeBuy: false, capSet: {} };
+                this.GS.cheat = { freeBuy: false, infiniteRes: false, capSet: {} };
             }
             // 恢复上次的作弊设置（存档不含 cheat 字段，单独持久化）
             try {
                 const saved = JSON.parse(localStorage.getItem(CHEAT_KEY) || 'null');
                 if (saved) {
                     this.GS.cheat.freeBuy = !!saved.freeBuy;
+                    this.GS.cheat.infiniteRes = !!saved.infiniteRes;
                     this.GS.cheat.capSet = saved.capSet || {};
                     if (saved.speed > 1) this.GS.speed = saved.speed;
                 }
@@ -61,6 +66,7 @@
             persist() {
                 localStorage.setItem(CHEAT_KEY, JSON.stringify({
                     freeBuy: this.GS.cheat.freeBuy,
+                    infiniteRes: this.GS.cheat.infiniteRes,
                     capSet: this.GS.cheat.capSet,
                     speed: this.GS.speed,
                 }));

@@ -36,7 +36,7 @@
     <!-- 升级子选项卡 -->
     <template v-if="ui.currentTechSubTab === 'upgrade'">
         <div class="grid-list">
-            <button v-for="u in visibleUpgrades" :key="u" class="card-btn upgrade-btn" :class="upgradeAffordClass(u)" :data-upgrade="u" @click="buyUpgrade(u)" v-tooltip="() => upgradeTooltip(u)"><b>{{ u }} Lv.{{ GS.upgrades[u].level }}</b></button>
+            <button v-for="u in visibleUpgrades" :key="u" class="card-btn upgrade-btn" :class="upgradeAffordClass(u)" :data-upgrade="u" @click="buyUpgrade(u, $event)" v-tooltip="() => upgradeTooltip(u)"><b>{{ u }} Lv.{{ GS.upgrades[u].level }}</b></button>
             <p v-if="visibleUpgrades.length === 0">暂无可用升级</p>
         </div>
     </template>
@@ -130,8 +130,9 @@
                     }
                 }
             },
-            buyUpgrade(u) {
-                const q = UI.getMultiplier();
+            buyUpgrade(u, e) {
+                const q = UI.getMultiplierFromEvent(e);
+                if (q <= 0) return; // 用户取消输入
                 if (!Core.buyUpgrade(u, q)) {
                     const up = this.GS.upgrades[u];
                     if (up && up.visible && !canAfford(up.price)) {

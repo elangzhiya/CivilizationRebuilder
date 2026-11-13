@@ -39,6 +39,19 @@
         return 1;
     }
 
+    // 结合点击事件的数量：Ctrl+点击（不带 Shift）弹出自定义数量输入框
+    // 返回 0 表示用户取消，调用方应直接放弃本次操作
+    function getMultiplierFromEvent(e) {
+        if (e && e.ctrlKey && !e.shiftKey) {
+            const input = prompt('输入操作数量：', '10');
+            if (input === null) return 0;
+            const n = Math.floor(Number(input));
+            if (isNaN(n) || n < 1) return 1;
+            return n;
+        }
+        return getMultiplier();
+    }
+
     // ---------- 建筑大分类显示名 ----------
     function getClassName(cls) {
         const map = { ground: '地面', space: '太阳系', galaxy: '银河系', earth_core: '地心', wormhole: '虫洞' };
@@ -135,6 +148,7 @@
     window.UI = {
         state,
         getMultiplier,
+        getMultiplierFromEvent,
         getClassName,
         getLocalResourcesForType,
         getLocalResourcesForClass,

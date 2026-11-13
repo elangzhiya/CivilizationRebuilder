@@ -24,7 +24,7 @@
                 <div v-for="b in cat.buildings" :key="b" class="building-card" :data-building="b"
                      :class="{ highlight: ui.hoveredResource && priceHasResource(ui.hoveredResource, b) }"
                      @mouseenter="hoverBuilding(b)" @mouseleave="unhoverBuilding()"
-                     @click="buy(b)" v-tooltip="() => buildingTooltip(b)">
+                     @click="buy(b, $event)" v-tooltip="() => buildingTooltip(b)">
                     <button v-if="hasModes(b)" class="mode-gear-btn" :data-building="b" :title="modeTitle(b)" @click.stop="switchMode(b)">⚙️</button>
                     <div class="building-card-info">
                         <strong :class="affordClass(b)">{{ b }}</strong>
@@ -33,8 +33,8 @@
                         <span v-if="hasModes(b)" class="mode-indicator"> | {{ modeName(b) }}</span>
                     </div>
                     <div class="btn-group">
-                        <button class="btn-square plus-btn" :data-building="b" @click.stop="activate(b)">+</button>
-                        <button class="btn-square minus-btn" :data-building="b" @click.stop="deactivate(b)">-</button>
+                        <button class="btn-square plus-btn" :data-building="b" @click.stop="activate(b, $event)">+</button>
+                        <button class="btn-square minus-btn" :data-building="b" @click.stop="deactivate(b, $event)">-</button>
                     </div>
                 </div>
             </div>
@@ -150,10 +150,11 @@
             unhoverBuilding() {
                 this.ui.hoveredBuilding = null;
             },
-            buy(b) {
+            buy(b, e) {
                 const bld = this.GS.buildings[b];
                 if (!bld) return;
-                const quantity = UI.getMultiplier();
+                const quantity = UI.getMultiplierFromEvent(e);
+                if (quantity <= 0) return; // 用户取消输入
                 // 若当前完全买不起，直接加入队列
                 if (!canAfford(bld.price)) {
                     addToQueue('building', b);
@@ -162,9 +163,10 @@
                 const success = Core.buyBuilding(b, quantity);
                 // 即使部分购买成功，剩余未购部分暂不处理（与原版一致）
             },
-            activate(b) {
+            activate(b, e) {
                 const bd = this.GS.buildings[b];
-                const max = UI.getMultiplier();
+                const max = UI.getMultiplierFromEvent(e);
+                if (max <= 0) return;
                 const inc = Math.min(max, bd.count - bd.active);
                 if (inc > 0) {
                     bd.active += inc;
@@ -173,9 +175,10 @@
                     computeProductionAndCaps();
                 }
             },
-            deactivate(b) {
+            deactivate(b, e) {
                 const bd = this.GS.buildings[b];
-                const max = UI.getMultiplier();
+                const max = UI.getMultiplierFromEvent(e);
+                if (max <= 0) return;
                 const dec = Math.min(max, bd.active);
                 if (dec > 0) {
                     bd.active -= dec;

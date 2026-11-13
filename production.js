@@ -276,6 +276,17 @@ const ProductionEngine = (function() {
                 if (state.resources[r]) state.resources[r].cap = state.cheat.capSet[r];
             }
         }
+        // ===== 作弊面板：无限资源（每帧把普通资源拉满到上限，消耗不再减少） =====
+        // 排除永恒/特殊资源（遗物、暗能量、孢子、时间晶体、奇点），避免破坏重置与倍速逻辑
+        if (state.cheat && state.cheat.infiniteRes) {
+            for (let r in state.resources) {
+                const res = state.resources[r];
+                if (res.cap === Infinity || res.cap <= 0) continue;
+                if (r === '遗物' || r === '暗能量' || r === '孢子' || r === '时间晶体' || r === '奇点') continue;
+                res.amount = res.cap;
+                res.visible = true;
+            }
+        }
 
         for (let bKey in state.buildings) {
             const bld = state.buildings[bKey];
