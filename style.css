@@ -1276,7 +1276,6 @@ body.dark-theme .building-card.highlight {
 .cheat-note{font-size:11px;color:#777;margin-top:4px}
 
 /* ===== 资源满仓标记 ===== */
-.res-full-tag{background:#e6a017;color:#fff;border-radius:3px;font-size:10px;padding:0 4px;margin-left:4px;flex-shrink:0}
 
 /* ===== 统计面板产量曲线 ===== */
 .stats-curve-box{border:1px solid var(--border, #ccc);border-radius:8px;padding:10px 12px;margin-bottom:1rem}
@@ -1285,8 +1284,6 @@ body.dark-theme .building-card.highlight {
 .stats-curve-svg{display:block;width:100%;height:150px}
 
 /* ===== 建筑卡片可购状态 + 快捷按钮 ===== */
-.building-card.can-buy{border-left:3px solid #4caf50}
-.building-card.cant-buy{border-left:3px solid transparent;opacity:.6}
 .btn-square.max-btn{min-width:1.6rem;font-size:.75rem}
 
 /* ===== 纪元重启：标题副语 + 背景故事 ===== */
