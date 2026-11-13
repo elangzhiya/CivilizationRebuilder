@@ -1,10 +1,15 @@
 // ui/resourceBar.js — 资源条组件
 // 由 GameState 响应式驱动：资源数量/上限/产量/可见性变化时自动更新。
+// 特殊资源（遗物/暗能量/奇点/智慧/时间晶体/孢子）单独拆出，显示在右侧栏。
 (function () {
+    // 特殊资源清单：不与常规资源混排
+    const SPECIAL_RESOURCES = ['遗物', '暗能量', '奇点', '智慧', '时间晶体', '孢子'];
+    const isSpecial = (r) => SPECIAL_RESOURCES.includes(r);
+
     const ResourceBar = {
         template: `
 <div id="resource-bar" class="resource-bar">
-    <div v-for="r in visibleResources" :key="r" class="resource-item" :data-resource="r"
+    <div v-for="r in normalResources" :key="r" class="resource-item" :data-resource="r"
          :class="{ highlight: ui.hoveredBuilding && priceHasResource(ui.hoveredBuilding, r) }"
          @mouseenter="ui.hoveredResource = r" @mouseleave="ui.hoveredResource = null"
          v-tooltip="() => resourceTooltip(r)">
@@ -20,6 +25,9 @@
         computed: {
             visibleResources() {
                 return Object.keys(this.GS.resources).filter(r => this.GS.resources[r].visible);
+            },
+            normalResources() {
+                return this.visibleResources.filter(r => !isSpecial(r));
             },
         },
         methods: {
@@ -152,4 +160,59 @@
         },
     };
     UI.registerComponent('ResourceBar', ResourceBar);
+
+    // ===== 特殊资源面板：显示在右侧栏（与常规资源分离） =====
+    const SpecialResources = {
+        template: `
+<div id="special-resources" class="special-res-box" v-if="specialResources.length > 0">
+    <div v-for="r in specialResources" :key="r" class="resource-item special-item" :data-resource="r"
+         @mouseenter="ui.hoveredResource = r" @mouseleave="ui.hoveredResource = null"
+         v-tooltip="() => resourceTooltip(r)">
+        <div class="resource-progress" :style="{ width: progressPercent(r) + '%' }"></div>
+        <div class="resource-content">
+            <span class="res-name" :style="prodColor(r)">{{ r }}</span>
+            <span class="res-value" :style="prodColor(r)">{{ valueText(r) }}</span>
+            <span class="res-prod" :style="prodColor(r)">{{ prodText(r) }}</span>
+        </div>
+    </div>
+</div>
+`,
+        computed: {
+            specialResources() {
+                return Object.keys(this.GS.resources).filter(r => this.GS.resources[r].visible && isSpecial(r));
+            },
+        },
+        methods: {
+            progressPercent(r) {
+                const res = this.GS.resources[r];
+                if (res.cap === Infinity || res.cap <= 0) return 0;
+                return Math.min(100, (res.amount / res.cap) * 100);
+            },
+            valueText(r) {
+                const res = this.GS.resources[r];
+                const capDisplay = res.cap === Infinity ? '∞' : formatNumber(res.cap);
+                return `${formatNumber(res.amount)}/${capDisplay}`;
+            },
+            prodText(r) {
+                const prod = this.GS.resources[r].production;
+                if (Math.abs(prod) > 1e-9) {
+                    const sign = prod > 0 ? '+' : '';
+                    return `${sign}${formatNumber(prod)}`;
+                }
+                return '';
+            },
+            prodColor(r) {
+                const prod = this.GS.resources[r].production;
+                if (prod < 0 && Math.abs(prod) > 1e-3) {
+                    return { color: 'var(--red)' };
+                }
+                return {};
+            },
+            resourceTooltip(r) {
+                // 复用 ResourceBar 的完整 tooltip（贡献来源+描述+满仓预计）
+                return ResourceBar.methods.resourceTooltip.call(this, r);
+            },
+        },
+    };
+    UI.registerComponent('SpecialResources', SpecialResources);
 })();
