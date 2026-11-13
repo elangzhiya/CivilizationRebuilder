@@ -53,6 +53,10 @@ const ProductionEngine = (function() {
     }
 
     // ========== 抽取公共乘数计算（原版重复部分） ==========
+    // ===== 数值平滑：全局产耗比调整（1.0 = 恢复原版） =====
+    const PROD_SCALE = 1.4;   // 全局产量放大 40%
+    const CONS_SCALE = 0.65;  // 全局消耗压缩至 65%（叠加原版机制）
+
     function _getBuildingMultipliers(buildingKey) {
         const state = GameState;
         const cfg = BUILDINGS_CONFIG[buildingKey];
@@ -66,6 +70,7 @@ const ProductionEngine = (function() {
         let prodMult = EffectsManager.getBuildingProdMultiplier(buildingKey);
         prodMult *= (1 + EffectsManager.getAdditiveValue('global.prod'));
         prodMult *= (1 + EffectsManager.getAdditiveValue('global.speed'));
+        prodMult *= PROD_SCALE;
         if (cfg.class === 'space') {
             prodMult *= (1 + EffectsManager.getAdditiveValue('global.spaceProd'));
         }
@@ -76,7 +81,7 @@ const ProductionEngine = (function() {
 
         let consMult = EffectsManager.getBuildingConsMultiplier(buildingKey);
         consMult *= (1 + EffectsManager.getAdditiveValue('global.speed'));
-        consMult *= 0.8; // 数值平滑：全建筑消耗减免 20%（改回 1.0 恢复原版），缓解资源压力
+        consMult *= CONS_SCALE; // 数值平滑：全建筑消耗减免（原为 0.8，现 0.65）
 
         let capMult = EffectsManager.getBuildingCapMultiplier(buildingKey);
 
