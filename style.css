@@ -1283,3 +1283,8 @@ body.dark-theme .building-card.highlight {
 .stats-curve-select{border:1px solid var(--border, #999);border-radius:4px;padding:3px 8px;font-size:13px;background:var(--bg-input, #fff);color:var(--text, #1a1a1a);margin-bottom:8px}
 .stats-curve-range{font-size:12px;color:var(--text-dim, #777);margin-left:10px}
 .stats-curve-svg{display:block;width:100%;height:150px}
+
+/* ===== 建筑卡片可购状态 + 快捷按钮 ===== */
+.building-card.can-buy{border-left:3px solid #4caf50}
+.building-card.cant-buy{border-left:3px solid transparent;opacity:.6}
+.btn-square.max-btn{min-width:1.6rem;font-size:.75rem}
