@@ -133,16 +133,13 @@
             // 贸易热度可视化：价格偏移 = exp(heat)，热度持续贸易改变并自然衰减
             heatText(r) {
                 const heat = this.GS.resources[r].tradeHeat || 0;
-                if (Math.abs(heat) < 1e-6) return '🌡️ 热度：平稳（价格无偏移）';
+                if (Math.abs(heat) < 1e-6) return '热度：平稳（价格无偏移）';
                 const pct = (Math.exp(heat) - 1) * 100;
-                if (heat > 0) return `🔥 热度 +${pct.toFixed(0)}%（被大量买入，价格偏高，适合出售）`;
-                return `❄️ 热度 ${pct.toFixed(0)}%（被大量卖出，价格偏低，适合买入）`;
+                if (heat > 0) return `热度 +${pct.toFixed(0)}%（被大量买入，价格偏高，适合出售）`;
+                return `热度 ${pct.toFixed(0)}%（被大量卖出，价格偏低，适合买入）`;
             },
             heatStyle(r) {
-                const heat = this.GS.resources[r].tradeHeat || 0;
-                if (heat > 1e-6) return { color: 'var(--red)' };
-                if (heat < -1e-6) return { color: '#2e8b57' };
-                return { color: 'var(--text-dim)' };
+                return {};
             },
             // 数值 → 输入框显示文本。空 / 非法一律给空串，避免把 "NaN" 塞进 DOM。
             volumeText(v) {
