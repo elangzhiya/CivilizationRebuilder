@@ -143,6 +143,146 @@ const BUILDINGS_CONFIG = {
         requiresLocal: {},
         desc: "石头地基、木梁和茅草屋顶，舒适的小屋可容纳5人。"
     },
+    "木屋": {
+        class: "ground", type: "住房",
+        unlockCondition: { tech: "伐木技术" },
+        cost: (s, c) => standardCost({木头: 30, 石头: 10}, 1.12, c, getGlobalCostMultiplier(s)),
+        produces: {}, consumes: {}, caps: {},
+        happiness: (state)=>{
+            if (state.techs["冰河时期"].researched){
+                let warm=state.buildings["取暖炉"]?.active||0;
+                warm+=1.5*state.buildings["煤炉"]?.active||0;
+                return -3*0.98**warm;
+            }
+            else return 0;
+        },
+        providesLocal: (state) => {
+            let pop = 3;
+            if (state.techs["天花"]?.researched) {
+                const disease = 2-2*Math.pow(0.99,Math.floor(GameState.gameDays/50))
+                const sanitation = state.buildings["卫生所"]?.active || 0;
+                const hospital = state.buildings["医院"]?.active || 0;
+                const inhibitor = Math.pow(0.99, sanitation + 2 * hospital);
+                pop = 3 - disease * inhibitor;
+                pop = Math.max(0, pop);
+            }
+            return { population: pop };
+        },
+        requiresLocal: {},
+        desc: "原木搭建的结实小屋，比帐篷体面得多，可容纳3人。"
+    },
+    "石屋": {
+        class: "ground", type: "住房",
+        unlockCondition: { tech: "采石技术" },
+        cost: (s, c) => standardCost({石头: 60, 木头: 20}, 1.12, c, getGlobalCostMultiplier(s)),
+        produces: {}, consumes: {}, caps: {},
+        happiness: (state)=>{
+            if (state.techs["冰河时期"].researched){
+                let warm=state.buildings["取暖炉"]?.active||0;
+                warm+=1.5*state.buildings["煤炉"]?.active||0;
+                return -2.5*0.98**warm;
+            }
+            else return 0;
+        },
+        providesLocal: (state) => {
+            let pop = 4;
+            if (state.techs["天花"]?.researched) {
+                const disease = 2.5-2.5*Math.pow(0.99,Math.floor(GameState.gameDays/50))
+                const sanitation = state.buildings["卫生所"]?.active || 0;
+                const hospital = state.buildings["医院"]?.active || 0;
+                const inhibitor = Math.pow(0.99, sanitation + 2 * hospital);
+                pop = 4 - disease * inhibitor;
+                pop = Math.max(0, pop);
+            }
+            return { population: pop };
+        },
+        requiresLocal: {},
+        desc: "石墙厚实、隔绝风雪，石屋可容纳4人，比木屋更耐寒。"
+    },
+    "砖房": {
+        class: "ground", type: "住房",
+        unlockCondition: { tech: "煤炭供暖" },
+        cost: (s, c) => standardCost({石头: 140, 煤: 25, 铁: 30}, 1.12, c, getGlobalCostMultiplier(s)),
+        produces: {}, consumes: {}, caps: {},
+        happiness: (state)=>{
+            if (state.techs["冰河时期"].researched){
+                let warm=state.buildings["取暖炉"]?.active||0;
+                warm+=1.5*state.buildings["煤炉"]?.active||0;
+                return -1.5*0.985**warm;
+            }
+            else return 0;
+        },
+        providesLocal: (state) => {
+            let pop = 6;
+            if (state.techs["天花"]?.researched) {
+                const disease = 3-3*Math.pow(0.99,Math.floor(GameState.gameDays/50))
+                const sanitation = state.buildings["卫生所"]?.active || 0;
+                const hospital = state.buildings["医院"]?.active || 0;
+                const inhibitor = Math.pow(0.99, sanitation + 2 * hospital);
+                pop = 6 - disease * inhibitor;
+                pop = Math.max(0, pop);
+            }
+            return { population: pop };
+        },
+        requiresLocal: {},
+        desc: "烧制砖块砌成的房屋，带壁炉烟囱，温暖舒适，可容纳6人。"
+    },
+    "钢构住宅": {
+        class: "ground", type: "住房",
+        unlockCondition: { tech: "炼钢技术" },
+        cost: (s, c) => standardCost({钢: 80, 建材: 40}, 1.10, c, getGlobalCostMultiplier(s)),
+        produces: {}, consumes: {电力: 0.05}, caps: {},
+        happiness: (state)=>{
+            if (state.techs["冰河时期"].researched){
+                let warm=state.buildings["取暖炉"]?.active||0;
+                warm+=1.5*state.buildings["煤炉"]?.active||0;
+                return -1*0.99**warm;
+            }
+            else return 0;
+        },
+        providesLocal: (state) => {
+            let pop = 8;
+            if (state.techs["天花"]?.researched) {
+                const disease = 3.5-3.5*Math.pow(0.99,Math.floor(GameState.gameDays/80))
+                const sanitation = state.buildings["卫生所"]?.active || 0;
+                const hospital = state.buildings["医院"]?.active || 0;
+                const inhibitor = Math.pow(0.99, sanitation + 2 * hospital);
+                pop = 8 - disease * inhibitor;
+                pop = Math.max(0, pop);
+            }
+            return { population: pop };
+        },
+        requiresLocal: {},
+        desc: "钢框架结构的标准化住宅，配备水电，可容纳8人。需要少量电力。"
+    },
+    "装配式公寓": {
+        class: "ground", type: "住房",
+        unlockCondition: { tech: "高级建筑学" },
+        cost: (s, c) => standardCost({建材: 150, 塑料: 60}, 1.10, c, getGlobalCostMultiplier(s)),
+        produces: {}, consumes: {电力: 0.12}, caps: {},
+        happiness: (state)=>{
+            if (state.techs["冰河时期"].researched){
+                let warm=state.buildings["取暖炉"]?.active||0;
+                warm+=1.5*state.buildings["煤炉"]?.active||0;
+                return -0.5*0.99**warm;
+            }
+            else return 0;
+        },
+        providesLocal: (state) => {
+            let pop = 12;
+            if (state.techs["天花"]?.researched) {
+                const disease = 4-4*Math.pow(0.99,Math.floor(GameState.gameDays/100))
+                const sanitation = state.buildings["卫生所"]?.active || 0;
+                const hospital = state.buildings["医院"]?.active || 0;
+                const inhibitor = Math.pow(0.99, sanitation + 2 * hospital);
+                pop = 12 - disease * inhibitor;
+                pop = Math.max(0, pop);
+            }
+            return { population: pop };
+        },
+        requiresLocal: {},
+        desc: "工厂预制、现场吊装的高层住宅，一栋可容纳12人。需要电力与建材工业支撑。"
+    },
     "公寓楼": {
         class: "ground", type: "住房",
         unlockCondition: { tech: "大宗存储技术" },
